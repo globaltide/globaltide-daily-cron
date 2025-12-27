@@ -1,0 +1,23 @@
+name: daily-snapshot
+
+on:
+  schedule:
+    - cron: '10 16 * * *' # 매일 UTC 16:10 = KST 01:10
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run daily snapshot
+        run: node scripts/daily.js
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NOW_DATA_BASE_URL: ${{ secrets.NOW_DATA_BASE_URL }}
